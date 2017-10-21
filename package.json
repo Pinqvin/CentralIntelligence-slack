@@ -5,8 +5,10 @@
   "main": "index.js",
   "scripts": {
     "start": "npm run build && npm run watch",
-    "build": "tsc",
+    "build": "npm run tslint && npm run build-ts",
     "watch": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run serve\"",
+    "serve": "nodemon dist/index.js",
+    "build-ts": "tsc",
     "watch-ts": "tsc -w",
     "tslint": "tslint -c tslint.json -p tsconfig.json",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -15,14 +17,20 @@
   "license": "MIT",
   "dependencies": {
     "@slack/client": "^3.14.1",
+    "@types/lodash": "^4.14.78",
+    "@types/winston": "^2.3.6",
+    "ci-client": "github:mikko/CentralIntelligence-client",
     "dotenv": "^4.0.0",
-    "ci-client": "github:mikko/CentralIntelligence-client"
+    "lodash": "^4.17.4",
+    "winston": "^2.4.0"
   },
   "engines": {
     "node": "8.x.x"
   },
   "devDependencies": {
     "@types/dotenv": "^4.0.1",
+    "@types/lodash": "^4.14.78",
+    "@types/node": "^8.0.46",
     "concurrently": "^3.5.0",
     "nodemon": "^1.12.1",
     "tslint": "^5.8.0",
