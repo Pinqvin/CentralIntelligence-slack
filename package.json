@@ -1,0 +1,31 @@
+{
+  "name": "ci-slack",
+  "version": "1.0.0",
+  "description": "Slack client for Central Intelligence System",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm run build && npm run watch",
+    "build": "tsc",
+    "watch": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run serve\"",
+    "watch-ts": "tsc -w",
+    "tslint": "tslint -c tslint.json -p tsconfig.json",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Juuso Tapaninen <juuso.tapaninen@futurice.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@slack/client": "^3.14.1",
+    "dotenv": "^4.0.0",
+    "ci-client": "github:mikko/CentralIntelligence-client"
+  },
+  "engines": {
+    "node": "8.x.x"
+  },
+  "devDependencies": {
+    "@types/dotenv": "^4.0.1",
+    "concurrently": "^3.5.0",
+    "nodemon": "^1.12.1",
+    "tslint": "^5.8.0",
+    "typescript": "^2.5.3"
+  }
+}
