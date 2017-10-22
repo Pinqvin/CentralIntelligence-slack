@@ -1,6 +1,8 @@
 import { CLIENT_EVENTS, RTM_EVENTS, RtmClient } from '@slack/client';
 import CIClient = require('ci-client');
+import head = require('lodash/head');
 import startsWith = require('lodash/startsWith');
+import tail = require('lodash/tail');
 import trim = require('lodash/trim');
 
 import * as Config from './config';
@@ -17,6 +19,7 @@ const ciClient = new CIClient({
   myHost: Config.MY_HOST,
   myPort: Config.MY_PORT,
   name: 'slackbot',
+  proxyPort: Config.MY_PROXY_PORT,
   serverHost: Config.SERVER_HOST,
   serverPort: Config.SERVER_PORT,
   trustedUserGroups: Config.TRUSTED_USER_GROUPS,
@@ -47,8 +50,23 @@ rtm.on(CLIENT_EVENTS.RTM.AUTHENTICATED, (rtmStartData) => {
 
 rtm.on(RTM_EVENTS.MESSAGE, (message) => {
   logger.silly('Received message:', message);
+  const isSubtypeMessage = message.subtype !== undefined;
+  const isCommand = startsWith(message.text, '.');
   const isHighlightingBot = startsWith(message.text, `<@${rtm.activeUserId}>`);
   const isDirectMessage = startsWith(message.channel, 'D');
+
+  // Ignore subtype messages like channel archivals, invites etc.
+  if (isSubtypeMessage) {
+    return;
+  }
+
+  if (isDirectMessage && isCommand) {
+    const trimmedMessage = trim(message.text.replace('.', ''));
+    const parts = trimmedMessage.split(' ');
+    const command = head(parts) || '';
+    const parameters = tail(parts).join(' ');
+    return ciClient.sendCommand(command, parameters, { message });
+  }
 
   if (isHighlightingBot || isDirectMessage) {
     const trimmedMessage = trim(message.text.replace(`<@${rtm.activeUserId}>`, ''));

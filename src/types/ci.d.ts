@@ -5,6 +5,7 @@ declare module 'ci-client' {
     serverPort: number;
     myHost: string;
     myPort: number;
+    proxyPort?: number | undefined;
     authKey: string;
     actions?: Actions;
     commands?: string[];
@@ -34,6 +35,7 @@ declare module 'ci-client' {
     constructor(config: Configuration);
 
     sendMessage: (message: string, context?: any) => void;
+    sendCommand: (command: string, parameters: string, context?: any) => void;
     setReceiver: (callback: (action: any, message: string, context: any) => void) => void;
     setUserParser: (callback: (context: any) => string) => void;
     setPrivateChatParser: (callback: (context: any) => boolean) => void;
