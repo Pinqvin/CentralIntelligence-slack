@@ -1,7 +1,5 @@
 FROM node:8
 
-ENV MY_PORT=3005
-
 WORKDIR /usr/src/app
 
 COPY package.json .
@@ -15,5 +13,5 @@ COPY . .
 RUN npm run build && rm -rf src
 RUN npm prune --production
 
-EXPOSE $MY_PORT
+EXPOSE 8000
 CMD [ "npm", "run", "serve" ]
